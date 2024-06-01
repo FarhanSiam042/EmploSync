@@ -1,5 +1,4 @@
 import java.io.*;
-import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,34 +46,15 @@ public class FileHandler {
                     found = true;
                 }
             }
-        }
 
-        if (found) {
-            // Close readers/writers before attempting to delete the file
-            System.gc();  // Suggest garbage collection to close any lingering file handles
             if (!employeeFile.delete()) {
                 throw new IOException("Could not delete file");
             }
 
-            // Add a retry mechanism for renaming the file
-            for (int i = 0; i < 5; i++) {
-                if (tempFile.renameTo(employeeFile)) {
-                    return true;
-                }
-                try {
-                    Thread.sleep(100);  // Wait a bit before retrying
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    throw new IOException("Interrupted while trying to rename file", e);
-                }
+            if (!tempFile.renameTo(employeeFile)) {
+                throw new IOException("Could not rename file");
             }
-
-            throw new IOException("Could not rename file");
-        } else {
-            // Clean up temp file if not found
-            tempFile.delete();
         }
-
         return found;
     }
 
@@ -94,28 +74,26 @@ public class FileHandler {
                 }
                 writer.write(line + "\n");
             }
-        }
 
-        // Close readers/writers before attempting to delete the file
-        System.gc();  // Suggest garbage collection to close any lingering file handles
-        if (!employeeFile.delete()) {
-            throw new IOException("Could not delete file");
-        }
+            // Ensure resources are released
+            reader.close();
+            writer.close();
 
-        // Add a retry mechanism for renaming the file
-        for (int i = 0; i < 5; i++) {
-            if (tempFile.renameTo(employeeFile)) {
-                return;
+            // Retry mechanism for deleting and renaming the file
+            for (int i = 0; i < 5; i++) {
+                if (employeeFile.delete() && tempFile.renameTo(employeeFile)) {
+                    return;
+                }
+                try {
+                    Thread.sleep(100);  // Wait a bit before retrying
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new IOException("Interrupted while trying to rename file", e);
+                }
             }
-            try {
-                Thread.sleep(100);  // Wait a bit before retrying
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new IOException("Interrupted while trying to rename file", e);
-            }
-        }
 
-        throw new IOException("Could not rename file");
+            throw new IOException("Could not rename file");
+        }
     }
 
     public void addCommentsToFile(String id, String comments) throws IOException {

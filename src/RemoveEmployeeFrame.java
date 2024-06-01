@@ -16,14 +16,28 @@ public class RemoveEmployeeFrame extends JFrame {
         setTitle("Remove Employee");
         setSize(400, 150);
         setLocationRelativeTo(null);
-        setLayout(new GridLayout(2, 2));
+        setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        add(new JLabel("Employee ID:"));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        add(new JLabel("Employee ID:"), gbc);
         idField = new JTextField();
-        add(idField);
+        gbc.gridx = 1;
+        add(idField, gbc);
 
         JButton removeButton = new JButton("Remove");
-        add(removeButton);
+        removeButton.setPreferredSize(new Dimension(100, 30));
+        removeButton.setFont(new Font("Arial", Font.BOLD, 12));
+        removeButton.setBackground(Color.RED);
+        removeButton.setForeground(Color.WHITE);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(removeButton, gbc);
+
         removeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

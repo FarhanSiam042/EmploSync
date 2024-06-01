@@ -18,6 +18,13 @@ public class LoginFrame extends JFrame {
         setLocationRelativeTo(null);
         setLayout(null);
 
+        JLabel imageLabel = new JLabel();
+        imageLabel.setBounds(50, 50, 150, 150);
+        ImageIcon imageIcon = new ImageIcon("emplo-preview.png"); // Provide the path to your image file
+        Image image = imageIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+        imageLabel.setIcon(new ImageIcon(image));
+        add(imageLabel);
+
         JLabel usernameLabel = new JLabel("Username:");
         usernameLabel.setBounds(200, 100, 100, 30);
         add(usernameLabel);
