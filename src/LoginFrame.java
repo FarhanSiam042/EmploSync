@@ -16,33 +16,33 @@ public class LoginFrame extends JFrame {
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(null);
+        setLayout(null); // Use absolute positioning
 
         JLabel imageLabel = new JLabel();
         imageLabel.setBounds(50, 50, 150, 150);
-        ImageIcon imageIcon = new ImageIcon("emplo-preview.png"); // Provide the path to your image file
+        ImageIcon imageIcon = new ImageIcon("emplo.png"); // Provide the path to your image file
         Image image = imageIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
         imageLabel.setIcon(new ImageIcon(image));
         add(imageLabel);
 
         JLabel usernameLabel = new JLabel("Username:");
-        usernameLabel.setBounds(200, 100, 100, 30);
+        usernameLabel.setBounds(250, 100, 100, 30);
         add(usernameLabel);
 
         usernameField = new JTextField();
-        usernameField.setBounds(300, 100, 150, 30);
+        usernameField.setBounds(350, 100, 150, 30);
         add(usernameField);
 
         JLabel passwordLabel = new JLabel("Password:");
-        passwordLabel.setBounds(200, 150, 100, 30);
+        passwordLabel.setBounds(250, 150, 100, 30);
         add(passwordLabel);
 
         passwordField = new JPasswordField();
-        passwordField.setBounds(300, 150, 150, 30);
+        passwordField.setBounds(350, 150, 150, 30);
         add(passwordField);
 
         JButton loginButton = new JButton("Login");
-        loginButton.setBounds(250, 200, 100, 30);
+        loginButton.setBounds(300, 200, 100, 30);
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -78,12 +78,5 @@ public class LoginFrame extends JFrame {
             e.printStackTrace();
         }
         return false;
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            LoginFrame loginFrame = new LoginFrame();
-            loginFrame.setVisible(true);
-        });
     }
 }
