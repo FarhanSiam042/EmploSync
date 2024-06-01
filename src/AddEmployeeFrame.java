@@ -17,35 +17,58 @@ public class AddEmployeeFrame extends JFrame {
         fileHandler = new FileHandler();
 
         setTitle("Add Employee");
-        setSize(400, 400);
+        setSize(300, 300);
         setLocationRelativeTo(null);
-        setLayout(new GridLayout(6, 2));
+        setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        add(new JLabel("Name:"));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        add(new JLabel("Name:"), gbc);
         nameField = new JTextField();
-        add(nameField);
+        gbc.gridx = 1;
+        add(nameField, gbc);
 
-        add(new JLabel("Position:"));
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        add(new JLabel("Position:"), gbc);
         positionField = new JTextField();
-        add(positionField);
+        gbc.gridx = 1;
+        add(positionField, gbc);
 
-        add(new JLabel("Salary:"));
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        add(new JLabel("Salary:"), gbc);
         salaryField = new JTextField();
-        add(salaryField);
+        gbc.gridx = 1;
+        add(salaryField, gbc);
 
-        add(new JLabel("Days Present:"));
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        add(new JLabel("Days Present:"), gbc);
         daysPresentField = new JTextField();
-        add(daysPresentField);
+        gbc.gridx = 1;
+        add(daysPresentField, gbc);
 
-        add(new JLabel("Days Absent:"));
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        add(new JLabel("Days Absent:"), gbc);
         daysAbsentField = new JTextField();
-        add(daysAbsentField);
+        gbc.gridx = 1;
+        add(daysAbsentField, gbc);
 
         JButton addButton = new JButton("Add");
-        addButton.setFont(new Font("Arial", Font.BOLD, 14));
+        addButton.setPreferredSize(new Dimension(100, 30));
+        addButton.setFont(new Font("Arial", Font.BOLD, 12));
         addButton.setBackground(Color.BLUE);
         addButton.setForeground(Color.WHITE);
-        add(addButton);
+        gbc.gridx = 1;
+        gbc.gridy = 5;
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(addButton, gbc);
+
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

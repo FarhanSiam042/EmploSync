@@ -17,17 +17,33 @@ public class CalculateBonusFrame extends JFrame {
         setTitle("Calculate Bonus and Fines");
         setSize(400, 200);
         setLocationRelativeTo(null);
-        setLayout(new GridLayout(3, 2));
+        setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        add(new JLabel("Employee ID:"));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        add(new JLabel("Employee ID:"), gbc);
         idField = new JTextField();
-        add(idField);
+        gbc.gridx = 1;
+        add(idField, gbc);
 
         JButton calculateButton = new JButton("Calculate");
-        add(calculateButton);
+        calculateButton.setPreferredSize(new Dimension(100, 30));
+        calculateButton.setFont(new Font("Arial", Font.BOLD, 12));
+        calculateButton.setBackground(Color.CYAN);
+        calculateButton.setForeground(Color.BLACK);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(calculateButton, gbc);
 
         bonusLabel = new JLabel("Bonus/Fines: ");
-        add(bonusLabel);
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(bonusLabel, gbc);
 
         calculateButton.addActionListener(new ActionListener() {
             @Override

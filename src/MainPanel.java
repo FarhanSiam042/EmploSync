@@ -5,9 +5,14 @@ public class MainPanel extends JPanel {
     private ViewEmployeeFrame viewEmployeeFrame;
 
     public MainPanel() {
-        setLayout(null); // Use absolute positioning
+        setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
 
-        Font buttonFont = new Font("Arial", Font.BOLD, 12);
+        Font buttonFont = new Font("Arial", Font.BOLD, 16); // Increased font size for better visibility
 
         JButton addEmployeeButton = createCustomButton("Add Employee", buttonFont, Color.BLUE, Color.WHITE);
         JButton removeEmployeeButton = createCustomButton("Remove Employee", buttonFont, Color.RED, Color.WHITE);
@@ -17,21 +22,43 @@ public class MainPanel extends JPanel {
         JButton calculateAttendanceButton = createCustomButton("Calculate Attendance", buttonFont, Color.MAGENTA, Color.BLACK);
         JButton reviewFeedbackButton = createCustomButton("Review & Feedback", buttonFont, Color.PINK, Color.BLACK);
 
-        addEmployeeButton.setBounds(50, 50, 150, 50);
-        removeEmployeeButton.setBounds(250, 50, 150, 50);
-        viewEmployeeButton.setBounds(450, 50, 150, 50);
-        calculateSalaryButton.setBounds(50, 150, 150, 50);
-        calculateBonusButton.setBounds(250, 150, 150, 50);
-        calculateAttendanceButton.setBounds(450, 150, 150, 50);
-        reviewFeedbackButton.setBounds(250, 250, 150, 50);
+        // Set preferred size for buttons
+        Dimension buttonSize = new Dimension(250, 60);
+        addEmployeeButton.setPreferredSize(buttonSize);
+        removeEmployeeButton.setPreferredSize(buttonSize);
+        viewEmployeeButton.setPreferredSize(buttonSize);
+        calculateSalaryButton.setPreferredSize(buttonSize);
+        calculateBonusButton.setPreferredSize(buttonSize);
+        calculateAttendanceButton.setPreferredSize(buttonSize);
+        reviewFeedbackButton.setPreferredSize(buttonSize);
 
-        add(addEmployeeButton);
-        add(removeEmployeeButton);
-        add(viewEmployeeButton);
-        add(calculateSalaryButton);
-        add(calculateBonusButton);
-        add(calculateAttendanceButton);
-        add(reviewFeedbackButton);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        add(addEmployeeButton, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        add(removeEmployeeButton, gbc);
+
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        add(viewEmployeeButton, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        add(calculateSalaryButton, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        add(calculateBonusButton, gbc);
+
+        gbc.gridx = 2;
+        gbc.gridy = 1;
+        add(calculateAttendanceButton, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        add(reviewFeedbackButton, gbc);
 
         addEmployeeButton.addActionListener(e -> new AddEmployeeFrame());
         removeEmployeeButton.addActionListener(e -> {
