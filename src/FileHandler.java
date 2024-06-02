@@ -5,29 +5,64 @@ import java.util.List;
 public class FileHandler {
     private File employeeFile;
     private File feedbackFile;
+    private List<Employee> employees;
 
     public FileHandler() {
         employeeFile = new File("employeedetails.txt");
         feedbackFile = new File("feedback.txt");
+        employees = new ArrayList<>();
+        loadEmployeesFromFile();
     }
 
-    public List<String> readEmployeeDetails() throws IOException {
-        List<String> employeeDetails = new ArrayList<>();
+    private void loadEmployeesFromFile() {
         if (employeeFile.exists()) {
             try (BufferedReader reader = new BufferedReader(new FileReader(employeeFile))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    employeeDetails.add(line);
+                    if (line.trim().isEmpty()) {
+                        continue; // Skip empty lines
+                    }
+                    String[] details = line.split(",");
+                    if (details.length == 6) {
+                        try {
+                            String name = details[0];
+                            String id = details[1];
+                            String position = details[2];
+                            double salary = Double.parseDouble(details[3]);
+                            int daysPresent = Integer.parseInt(details[4]);
+                            int daysAbsent = Integer.parseInt(details[5]);
+                            employees.add(new Employee(name, id, position, salary, daysPresent, daysAbsent));
+                        } catch (NumberFormatException e) {
+                            System.err.println("Skipping malformed line: " + line);
+                        }
+                    } else {
+                        System.err.println("Skipping malformed line: " + line);
+                    }
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
-        return employeeDetails;
     }
 
-    public void addEmployeeToFile(String name, String id, String position, String salary, String daysPresent, String daysAbsent) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(employeeFile, true))) {
-            writer.write(name + "," + id + "," + position + "," + salary + "," + daysPresent + "," + daysAbsent + "\n");
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+
+    public Employee getEmployeeById(String id) {
+        for (Employee employee : employees) {
+            if (employee.getId().equals(id)) {
+                return employee;
+            }
         }
+        return null;
+    }
+
+    public void addEmployeeToFile(Employee employee) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(employeeFile, true))) {
+            writer.write(employee.getName() + "," + employee.getId() + "," + employee.getPosition() + "," + employee.getSalary() + "," + employee.getDaysPresent() + "," + employee.getDaysAbsent() + "\n");
+        }
+        employees.add(employee);
     }
 
     public boolean removeEmployeeFromFile(String id) throws IOException {
@@ -40,21 +75,26 @@ public class FileHandler {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] details = line.split(",");
-                if (!details[1].equals(id)) {
+                if (details.length > 1 && !details[1].equals(id)) {
                     writer.write(line + "\n");
-                } else {
+                } else if (details.length > 1 && details[1].equals(id)) {
                     found = true;
                 }
             }
+        }
 
+        if (found) {
             if (!employeeFile.delete()) {
                 throw new IOException("Could not delete file");
             }
-
             if (!tempFile.renameTo(employeeFile)) {
                 throw new IOException("Could not rename file");
             }
+        } else {
+            tempFile.delete();
         }
+
+        employees.removeIf(emp -> emp.getId().equals(id));
         return found;
     }
 
@@ -67,32 +107,28 @@ public class FileHandler {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] details = line.split(",");
-                if (details[1].equals(id)) {
+                if (details.length > 1 && details[1].equals(id)) {
                     details[4] = String.valueOf(daysPresent);
                     details[5] = String.valueOf(daysAbsent);
                     line = String.join(",", details);
                 }
                 writer.write(line + "\n");
             }
+        }
 
-            // Ensure resources are released
-            reader.close();
-            writer.close();
-
-            // Retry mechanism for deleting and renaming the file
-            for (int i = 0; i < 5; i++) {
-                if (employeeFile.delete() && tempFile.renameTo(employeeFile)) {
-                    return;
-                }
-                try {
-                    Thread.sleep(100);  // Wait a bit before retrying
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    throw new IOException("Interrupted while trying to rename file", e);
-                }
-            }
-
+        if (!employeeFile.delete()) {
+            throw new IOException("Could not delete file");
+        }
+        if (!tempFile.renameTo(employeeFile)) {
             throw new IOException("Could not rename file");
+        }
+
+        for (Employee emp : employees) {
+            if (emp.getId().equals(id)) {
+                emp.setDaysPresent(daysPresent);
+                emp.setDaysAbsent(daysAbsent);
+                break;
+            }
         }
     }
 

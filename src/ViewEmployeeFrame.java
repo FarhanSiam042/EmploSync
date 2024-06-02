@@ -1,11 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 import java.util.List;
 
 public class ViewEmployeeFrame extends JFrame {
-    private JTextArea textArea;
     private FileHandler fileHandler;
+    private JTextArea employeeDetailsArea;
 
     public ViewEmployeeFrame() {
         fileHandler = new FileHandler();
@@ -15,25 +14,36 @@ public class ViewEmployeeFrame extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        textArea = new JTextArea();
-        textArea.setEditable(false);
-        add(new JScrollPane(textArea), BorderLayout.CENTER);
+        employeeDetailsArea = new JTextArea();
+        employeeDetailsArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(employeeDetailsArea);
+
+        add(scrollPane, BorderLayout.CENTER);
 
         loadEmployeeDetails();
+
         setVisible(true);
     }
 
-    public void loadEmployeeDetails() {
-        textArea.setText(""); // Clear existing content
-
+    private void loadEmployeeDetails() {
         try {
-            List<String> employeeDetails = fileHandler.readEmployeeDetails();
-            for (String detail : employeeDetails) {
-                textArea.append(detail + "\n");
+            List<Employee> employees = fileHandler.getEmployees();
+            StringBuilder details = new StringBuilder();
+            for (Employee emp : employees) {
+                details.append("Name: ").append(emp.getName()).append("\n")
+                        .append("ID: ").append(emp.getId()).append("\n")
+                        .append("Position: ").append(emp.getPosition()).append("\n")
+                        .append("Salary: ").append(emp.getSalary()).append("\n")
+                        .append("Days Present: ").append(emp.getDaysPresent()).append("\n")
+                        .append("Days Absent: ").append(emp.getDaysAbsent()).append("\n\n");
             }
-        } catch (IOException e) {
+            employeeDetailsArea.setText(details.toString());
+        } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error loading employee details", "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    public void updateEmployeeList() {
+        loadEmployeeDetails();
     }
 }

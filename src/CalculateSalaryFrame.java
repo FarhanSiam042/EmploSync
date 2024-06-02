@@ -2,20 +2,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 
 public class CalculateSalaryFrame extends JFrame {
-    private JTextField idField;
-    private JLabel salaryLabel;
     private FileHandler fileHandler;
+    private JTextField idField;
+    private JLabel resultLabel;
 
     public CalculateSalaryFrame() {
         fileHandler = new FileHandler();
 
         setTitle("Calculate Salary");
-        setSize(400, 200);
+        setSize(400, 300);
         setLocationRelativeTo(null);
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -30,52 +29,46 @@ public class CalculateSalaryFrame extends JFrame {
         add(idField, gbc);
 
         JButton calculateButton = new JButton("Calculate");
-        calculateButton.setPreferredSize(new Dimension(100, 30));
-        calculateButton.setFont(new Font("Arial", Font.BOLD, 12));
-        calculateButton.setBackground(Color.ORANGE);
+        calculateButton.setBackground(new Color(255, 253, 208)); // Cream color for button
         calculateButton.setForeground(Color.BLACK);
         gbc.gridx = 1;
         gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.CENTER;
         add(calculateButton, gbc);
 
-        salaryLabel = new JLabel("Salary: ");
+        resultLabel = new JLabel("Salary: ");
         gbc.gridx = 1;
         gbc.gridy = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        add(salaryLabel, gbc);
+        add(resultLabel, gbc);
 
         calculateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String id = idField.getText();
-                String salary = calculateSalary(id);
-                salaryLabel.setText("Salary: " + salary);
+                calculateSalary();
             }
         });
 
         setVisible(true);
     }
 
-    private String calculateSalary(String id) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("employeedetails.txt"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] details = line.split(",");
-                if (details[1].equals(id)) {
-                    double baseSalary = Double.parseDouble(details[3]);
-                    int daysPresent = Integer.parseInt(details[4]);
-                    int daysAbsent = Integer.parseInt(details[5]);
-                    double attendancePercentage = (double) daysPresent / (daysPresent + daysAbsent) * 100;
-                    double deductions = daysAbsent * 0.01 * baseSalary;
-                    double bonus = attendancePercentage == 100 ? 0.02 * baseSalary : 0;
-                    double finalSalary = baseSalary - deductions + bonus;
-                    return String.format("%.2f", finalSalary);
+    private void calculateSalary() {
+        String id = idField.getText();
+
+        try {
+            Employee employee = fileHandler.getEmployeeById(id);
+            if (employee != null) {
+                double salary = employee.getSalary();
+                double attendancePercentage = ((double) employee.getDaysPresent() / (employee.getDaysPresent() + employee.getDaysAbsent())) * 100;
+                if (attendancePercentage == 100) {
+                    salary += salary * 0.02; // 2% bonus for perfect attendance
                 }
+                salary -= salary * (0.01 * employee.getDaysAbsent()); // 1% deduction per day absent
+                resultLabel.setText(String.format("Salary: %.2f", salary));
+            } else {
+                resultLabel.setText("Employee not found");
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            resultLabel.setText("Error calculating salary");
         }
-        return "Employee not found";
     }
 }

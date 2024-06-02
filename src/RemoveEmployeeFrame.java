@@ -6,15 +6,13 @@ import java.io.IOException;
 
 public class RemoveEmployeeFrame extends JFrame {
     private JTextField idField;
-    private ViewEmployeeFrame viewEmployeeFrame;
     private FileHandler fileHandler;
 
     public RemoveEmployeeFrame(ViewEmployeeFrame viewEmployeeFrame) {
-        this.viewEmployeeFrame = viewEmployeeFrame;
-        this.fileHandler = new FileHandler();
+        fileHandler = new FileHandler();
 
         setTitle("Remove Employee");
-        setSize(400, 150);
+        setSize(400, 200);
         setLocationRelativeTo(null);
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -42,22 +40,20 @@ public class RemoveEmployeeFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String id = idField.getText();
-                boolean removed = false;
                 try {
-                    removed = fileHandler.removeEmployeeFromFile(id);
+                    boolean removed = fileHandler.removeEmployeeFromFile(id);
+                    if (removed) {
+                        JOptionPane.showMessageDialog(RemoveEmployeeFrame.this, "Employee removed successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+                        if (viewEmployeeFrame != null) {
+                            viewEmployeeFrame.updateEmployeeList();
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(RemoveEmployeeFrame.this, "Employee ID not found", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 } catch (IOException ex) {
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(RemoveEmployeeFrame.this, "Error removing employee", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-                if (removed) {
-                    JOptionPane.showMessageDialog(RemoveEmployeeFrame.this, "Employee removed successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    if (viewEmployeeFrame != null) {
-                        viewEmployeeFrame.loadEmployeeDetails();
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(RemoveEmployeeFrame.this, "Employee ID not found.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                dispose();
             }
         });
 

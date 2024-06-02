@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.Random;
 
 public class AddEmployeeFrame extends JFrame {
     private JTextField nameField;
@@ -17,7 +16,7 @@ public class AddEmployeeFrame extends JFrame {
         fileHandler = new FileHandler();
 
         setTitle("Add Employee");
-        setSize(300, 300);
+        setSize(400, 300);
         setLocationRelativeTo(null);
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -62,8 +61,8 @@ public class AddEmployeeFrame extends JFrame {
         JButton addButton = new JButton("Add");
         addButton.setPreferredSize(new Dimension(100, 30));
         addButton.setFont(new Font("Arial", Font.BOLD, 12));
-        addButton.setBackground(Color.BLUE);
-        addButton.setForeground(Color.WHITE);
+        addButton.setBackground(new Color(255, 253, 208));
+        addButton.setForeground(Color.BLACK);
         gbc.gridx = 1;
         gbc.gridy = 5;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -74,21 +73,35 @@ public class AddEmployeeFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String name = nameField.getText();
                 String position = positionField.getText();
-                String salary = salaryField.getText();
-                String daysPresent = daysPresentField.getText();
-                String daysAbsent = daysAbsentField.getText();
+                String salaryText = salaryField.getText();
+                String daysPresentText = daysPresentField.getText();
+                String daysAbsentText = daysAbsentField.getText();
 
-                if (name.isEmpty() || position.isEmpty() || salary.isEmpty() || daysPresent.isEmpty() || daysAbsent.isEmpty()) {
+                if (name.isEmpty() || position.isEmpty() || salaryText.isEmpty() || daysPresentText.isEmpty() || daysAbsentText.isEmpty()) {
                     JOptionPane.showMessageDialog(AddEmployeeFrame.this, "All fields must be filled out", "Error", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    String id = generateRandomID();
-                    try {
-                        fileHandler.addEmployeeToFile(name, id, position, salary, daysPresent, daysAbsent);
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                        JOptionPane.showMessageDialog(AddEmployeeFrame.this, "Error saving employee details", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
+                    return;
+                }
+
+                if (!name.matches("[a-zA-Z ]+") || !position.matches("[a-zA-Z ]+")) {
+                    JOptionPane.showMessageDialog(AddEmployeeFrame.this, "Name and Position must be alphabetic", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                try {
+                    double salary = Double.parseDouble(salaryText);
+                    int daysPresent = Integer.parseInt(daysPresentText);
+                    int daysAbsent = Integer.parseInt(daysAbsentText);
+
+                    String id = generateEmployeeId();
+                    Employee employee = new Employee(name, id, position, salary, daysPresent, daysAbsent);
+                    fileHandler.addEmployeeToFile(employee);
+
+                    JOptionPane.showMessageDialog(AddEmployeeFrame.this, "Employee added successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
                     dispose();
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(AddEmployeeFrame.this, "Salary must be a number and Days Present/Absent must be integers", "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(AddEmployeeFrame.this, "Error saving employee", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -96,9 +109,7 @@ public class AddEmployeeFrame extends JFrame {
         setVisible(true);
     }
 
-    private String generateRandomID() {
-        Random rand = new Random();
-        int id = rand.nextInt(9000) + 1000; // Generates a random 4-digit number
-        return String.valueOf(id);
+    private String generateEmployeeId() {
+        return "E" + System.currentTimeMillis(); // Simple ID generation logic, you can improve this
     }
 }

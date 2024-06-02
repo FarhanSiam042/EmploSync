@@ -2,20 +2,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 
 public class CalculateBonusFrame extends JFrame {
-    private JTextField idField;
-    private JLabel bonusLabel;
     private FileHandler fileHandler;
+    private JTextField idField;
+    private JLabel resultLabel;
 
     public CalculateBonusFrame() {
         fileHandler = new FileHandler();
 
         setTitle("Calculate Bonus and Fines");
-        setSize(400, 200);
+        setSize(400, 300);
         setLocationRelativeTo(null);
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -30,51 +28,50 @@ public class CalculateBonusFrame extends JFrame {
         add(idField, gbc);
 
         JButton calculateButton = new JButton("Calculate");
-        calculateButton.setPreferredSize(new Dimension(100, 30));
-        calculateButton.setFont(new Font("Arial", Font.BOLD, 12));
-        calculateButton.setBackground(Color.CYAN);
+        calculateButton.setBackground(new Color(255, 253, 208)); // Cream color for button
         calculateButton.setForeground(Color.BLACK);
         gbc.gridx = 1;
         gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.CENTER;
         add(calculateButton, gbc);
 
-        bonusLabel = new JLabel("Bonus/Fines: ");
+        resultLabel = new JLabel("Bonus and Fines: ");
         gbc.gridx = 1;
         gbc.gridy = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        add(bonusLabel, gbc);
+        add(resultLabel, gbc);
 
         calculateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String id = idField.getText();
-                String bonusFines = calculateBonusFines(id);
-                bonusLabel.setText("Bonus/Fines: " + bonusFines);
+                calculateBonusFines();
             }
         });
 
         setVisible(true);
     }
 
-    private String calculateBonusFines(String id) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("employeedetails.txt"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] details = line.split(",");
-                if (details[1].equals(id)) {
-                    int daysPresent = Integer.parseInt(details[4]);
-                    int daysAbsent = Integer.parseInt(details[5]);
-                    double baseSalary = Double.parseDouble(details[3]);
-                    double attendancePercentage = (double) daysPresent / (daysPresent + daysAbsent) * 100;
-                    double fines = daysAbsent * 0.01 * baseSalary;
-                    double bonus = attendancePercentage == 100 ? 0.02 * baseSalary : 0;
-                    return String.format("Bonus: %.2f, Fines: %.2f", bonus, fines);
+    private void calculateBonusFines() {
+        String id = idField.getText();
+
+        try {
+            Employee employee = fileHandler.getEmployeeById(id);
+            if (employee != null) {
+                double salary = employee.getSalary();
+                double attendancePercentage = ((double) employee.getDaysPresent() / (employee.getDaysPresent() + employee.getDaysAbsent())) * 100;
+                double bonus = 0;
+                double fine = 0;
+
+                if (attendancePercentage == 100) {
+                    bonus = salary * 0.02; // 2% bonus for perfect attendance
                 }
+                fine = salary * (0.01 * employee.getDaysAbsent()); // 1% deduction per day absent
+
+                resultLabel.setText(String.format("Bonus: %.2f, Fine: %.2f", bonus, fine));
+            } else {
+                resultLabel.setText("Employee not found");
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            resultLabel.setText("Error calculating bonus and fines");
         }
-        return "Employee not found";
     }
 }

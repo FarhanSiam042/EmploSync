@@ -7,7 +7,7 @@ public class MainPanel extends JPanel {
 
     public MainPanel() {
         // Load the background image
-        backgroundImage = new ImageIcon("background.png").getImage(); // Provide the path to your main panel image file
+        backgroundImage = new ImageIcon("background.png").getImage(); // Use the path to your uploaded image file
 
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -16,8 +16,9 @@ public class MainPanel extends JPanel {
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
 
-        Font buttonFont = new Font("Arial", Font.BOLD, 16);
-        Color creamColor = new Color(255, 228, 196);
+        Font buttonFont = new Font("Arial", Font.BOLD, 16); // Increased font size for better visibility
+
+        Color creamColor = new Color(255, 253, 208); // Cream color
 
         JButton addEmployeeButton = createCustomButton("Add Employee", buttonFont, creamColor, Color.BLACK);
         JButton removeEmployeeButton = createCustomButton("Remove Employee", buttonFont, creamColor, Color.BLACK);
@@ -85,7 +86,7 @@ public class MainPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // Draw the background image
+        // Draw the background image, scaled to fit the panel
         g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
     }
 
