@@ -20,7 +20,7 @@ public class LoginFrame extends JFrame {
 
         JLabel imageLabel = new JLabel();
         imageLabel.setBounds(50, 50, 150, 150);
-        ImageIcon imageIcon = new ImageIcon("emplo-preview.png"); // Provide the path to your image file
+        ImageIcon imageIcon = new ImageIcon("emplo-preview.png");
         Image image = imageIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
         imageLabel.setIcon(new ImageIcon(image));
         add(imageLabel);
