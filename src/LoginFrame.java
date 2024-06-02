@@ -16,7 +16,7 @@ public class LoginFrame extends JFrame {
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(null); // Use absolute positioning
+        setLayout(null);
 
         JLabel imageLabel = new JLabel();
         imageLabel.setBounds(50, 50, 150, 150);

@@ -64,7 +64,7 @@ public class ReviewFeedbackFrame extends JFrame {
         add(viewCommentsScrollPane, gbc);
 
         JButton viewButton = new JButton("View Comments");
-        viewButton.setBackground(new Color(255, 253, 208)); // Cream color for button
+        viewButton.setBackground(new Color(255, 253, 208));
         viewButton.setForeground(Color.BLACK);
         gbc.gridy = 6;
         gbc.fill = GridBagConstraints.NONE;
