@@ -1,23 +1,64 @@
-This is the Employee management and payroll system- Emplosync which is to manage employees
-It has feature like-
-Calculate Salary
-Add Employee Details
-Remove Employee Details
-View Employee Details
-Calculate Bonus and Fine
-AutoGenerate ID
-Calculate Attendance
-Review & Feedback
+# 🏢 Emplosync  
+**Employee Management and Payroll System**  
 
-How to use-
-Entering valid username and password of the admin panel , you can login to the application 
-1)AddEmployee Feature- by giving information of Employee name, his postion , his salary, no of days he worked in a month, no of days he was absent in the month, we can add the employee
-2)Remove Employee Feature- by entering the valid id of the employee , we can remove an employee from our system
-3)View Employee Feature - by this we can all the information of employee working in the company and by AutoGenerate ID generation , employee will be assigned a id which will be also visible
-4)Calculate Salary - by entering valid id of employee, we can find out his salary for the month 
-5)Calculate Bonus and Fine- if the employee has zero absent in the month, he will get a 2% bonus and if he is absent for 1 day, his 1% salary will be deducted
-6)Calculate Attendance- By entering a valid id , we can load the attendence of employee from data base or we can manually calculate the attendence
-7)Review & Feedback- By entering valid id, the employer can give feedback to the employee and also can view it later
+**Emplosync** is a comprehensive **Employee Management and Payroll System** designed to streamline employee management for companies. It features salary calculations, employee details management, attendance tracking, ID generation, and performance feedback. Built using **Java**, **Swing**, and **file manipulation**, Emplosync provides an intuitive interface and robust functionality for HR needs.
 
+---
+## 🚀 Features  
 
+1. **Calculate Salary**  
+   - Calculate monthly salary for employees based on attendance and absences.
+
+2. **Add Employee Details**  
+   - Add new employees by entering their name, position, salary, and attendance details.  
+   - Automatically generates and assigns a unique employee ID.  
+
+3. **Remove Employee Details**  
+   - Remove employees from the system by entering their unique ID.  
+
+4. **View Employee Details**  
+   - Display all employee information, including name, position, salary, attendance, and auto-generated ID.  
+
+5. **Calculate Bonus and Fine**  
+   - Bonus: 2% bonus for employees with perfect attendance.  
+   - Fine: 1% salary deduction for each day absent.  
+
+6. **Calculate Attendance**  
+   - Load attendance data from the database or manually calculate attendance by entering employee details.  
+
+7. **Review & Feedback**  
+   - Employers can provide and view feedback for employees based on their performance.
+
+---
+
+## 🛠️ Technologies Used  
+
+- **Programming Language**: Java  
+- **UI Framework**: Swing  
+- **Data Storage**: File-based storage (for employee details, attendance, and feedback).  
+
+---
+
+## 📂 Project Structure  
+
+```plaintext
+Emplosync/
+│
+├── src/
+│   ├── Main.java            # Entry point of the application
+│   ├── Login.java           # Admin login panel
+│   ├── AddEmployee.java     # Feature to add employee details
+│   ├── RemoveEmployee.java  # Feature to remove employee details
+│   ├── ViewEmployee.java    # Feature to view employee details
+│   ├── CalculateSalary.java # Feature to calculate employee salary
+│   ├── BonusFine.java       # Feature to calculate bonus and fine
+│   ├── Attendance.java      # Feature to calculate attendance
+│   └── Feedback.java        # Feature to manage feedback and reviews
+│
+├── data/
+│   ├── employees.txt        # Stores employee details
+│   ├── attendance.txt       # Stores attendance data
+│   └── feedback.txt         # Stores employee feedback
+│
+└── README.md                # Project documentation
 
